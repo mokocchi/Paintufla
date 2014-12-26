@@ -11,7 +11,7 @@ namespace Paintufla
         private int ancho = 2;
         private ToolStripMenuItem archivoToolStripMenuItem;
         private ToolStripMenuItem ayudaToolStripMenuItem;
-        private Button button1;
+        private Button button2;
         private Color colorActual = Color.Black;
         private ColorDialog colorDialog1;
         private ToolStripMenuItem coloresToolStripMenuItem;
@@ -27,7 +27,6 @@ namespace Paintufla
         private ToolStripMenuItem nuevoToolStripMenuItem;
         private Panel panel1;
         private Panel panel10;
-        private Panel panel2;
         private Panel panel3;
         private Panel panel4;
         private Panel panel5;
@@ -47,12 +46,6 @@ namespace Paintufla
         public MainForm()
         {
             this.InitializeComponent();
-        }
-
-        private void Button1Click(object sender, EventArgs e)
-        {
-            this.pictureBox1.Image.Dispose();
-            this.pictureBox1.Image = new Bitmap(this.pictureBox1.Width, this.pictureBox1.Height);
         }
 
         private bool enRango(int pX, int pY)
@@ -117,22 +110,8 @@ namespace Paintufla
 
         private void Panel1Click(object sender, EventArgs e)
         {
-            if ((sender as Panel).BackgroundImage == null)
-            {
-                this.colorActual = (sender as Panel).BackColor;
-                this.labelColorAct.BackColor = (sender as Panel).BackColor;
-            }
-        }
-
-        private void Panel2DoubleClick(object sender, EventArgs e)
-        {
-            if (this.colorDialog1.ShowDialog() != DialogResult.Cancel)
-            {
-                this.panel2.BackgroundImage = null;
-                (sender as Panel).BackColor = this.colorDialog1.Color;
-                this.colorActual = (sender as Panel).BackColor;
-                this.labelColorAct.BackColor = (sender as Panel).BackColor;
-            }
+            this.colorActual = (sender as Panel).BackColor;
+            this.labelColorAct.BackColor = (sender as Panel).BackColor;
         }
 
         private void PictureBox1MouseDown(object sender, MouseEventArgs e)
@@ -168,6 +147,25 @@ namespace Paintufla
         {
             if ((sender as ComboBox).SelectedItem != null)
                 this.ancho = (int)(sender as ComboBox).SelectedItem;
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if (this.colorDialog1.ShowDialog() != DialogResult.Cancel)
+            {
+                this.colorActual = this.colorDialog1.Color;
+                this.labelColorAct.BackColor = this.colorDialog1.Color;
+            }
+        }
+
+        private void nuevoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DialogResult res = MessageBox.Show("¿Seguro que quiere crear una hoja nueva? Se perderán los datos no guardados.", "Nuevo", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            if (res == DialogResult.Yes)
+            {
+                this.pictureBox1.Image.Dispose();
+                this.pictureBox1.Image = new Bitmap(this.pictureBox1.Width, this.pictureBox1.Height);
+            }
         }
     }
 }
