@@ -163,5 +163,11 @@ namespace Paintufla
             }
             this.pictureBox1.Refresh();
         }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if ((sender as ComboBox).SelectedItem != null)
+                this.ancho = (int)(sender as ComboBox).SelectedItem;
+        }
     }
 }
