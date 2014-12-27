@@ -42,7 +42,8 @@ namespace Paintufla
         private SaveFileDialog saveFileDialog1;
         private int x = 20;
         private int y = 20;
-        private string filename = "Nuevo dibujo.png";
+        private string filename;
+        private bool cambio = false;
 
         // Methods
         public MainForm()
@@ -139,6 +140,7 @@ namespace Paintufla
                     if (this.enRango(pX, pY))
                     {
                         (this.pictureBox1.Image as Bitmap).SetPixel(pX, pY, this.colorActual);
+                        this.cambio = true;
                     }
                 }
             }
@@ -167,15 +169,58 @@ namespace Paintufla
             {
                 this.pictureBox1.Image.Dispose();
                 this.pictureBox1.Image = new Bitmap(this.pictureBox1.Width, this.pictureBox1.Height);
+                this.filename = null;
+                this.cambio = false;
             }
         }
 
         private void guardarComoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if(this.saveFileDialog1.ShowDialog()==DialogResult.OK) {
+            guardarComo();
+        }
+
+        private void guardarComo()
+        {
+            if (this.saveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
                 this.filename = this.saveFileDialog1.FileName;
-                this.pictureBox1.Image.Save(this.filename,System.Drawing.Imaging.ImageFormat.Png);
+                this.pictureBox1.Image.Save(this.filename, System.Drawing.Imaging.ImageFormat.Png);
+                this.cambio = false;
             }
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (this.cambio)
+            {
+                DialogResult res = MessageBox.Show("¿Desea guardar los cambios antes de salir?", "Salir", MessageBoxButtons.YesNoCancel);
+                if (res == DialogResult.Yes)
+                {
+                    if (this.filename != null)
+                    {
+                        guardarComo();
+                    }
+                    else
+                    {
+                        guardarComo();
+                    }
+                }
+                else if (res == DialogResult.Cancel)
+                {
+                    e.Cancel = true;
+                }
+            }
+        }
+
+        private void guardarToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.pictureBox1.Image.Save(this.filename, System.Drawing.Imaging.ImageFormat.Png);
+            this.cambio = false;
+        }
+
+        private void archivoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.guardarToolStripMenuItem.Enabled = (filename != null && this.cambio);
         }
     }
 }
