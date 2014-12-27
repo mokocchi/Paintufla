@@ -62,6 +62,7 @@ namespace Paintufla
             this.button2 = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -118,6 +119,7 @@ namespace Paintufla
             this.guardarComoToolStripMenuItem.Name = "guardarComoToolStripMenuItem";
             this.guardarComoToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.guardarComoToolStripMenuItem.Text = "Guardar Como";
+            this.guardarComoToolStripMenuItem.Click += new System.EventHandler(this.guardarComoToolStripMenuItem_Click);
             // 
             // ediciónToolStripMenuItem
             // 
@@ -337,6 +339,11 @@ namespace Paintufla
             this.label2.Text = "Ancho Pincel";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // saveFileDialog1
+            // 
+            this.saveFileDialog1.DefaultExt = "png";
+            this.saveFileDialog1.Filter = "Portable Network Graphics (PNG)|*.png";
+            // 
             // MainForm
             // 
             this.BackColor = System.Drawing.SystemColors.AppWorkspace;
@@ -361,6 +368,8 @@ namespace Paintufla
         }
 
         #endregion
+
+        
     }
 }
 

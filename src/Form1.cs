@@ -39,8 +39,10 @@ namespace Paintufla
         private Timer timer1;
         private Panel tiraColores;
         private ToolStripMenuItem verToolStripMenuItem;
+        private SaveFileDialog saveFileDialog1;
         private int x = 20;
         private int y = 20;
+        private string filename = "Nuevo dibujo.png";
 
         // Methods
         public MainForm()
@@ -165,6 +167,14 @@ namespace Paintufla
             {
                 this.pictureBox1.Image.Dispose();
                 this.pictureBox1.Image = new Bitmap(this.pictureBox1.Width, this.pictureBox1.Height);
+            }
+        }
+
+        private void guardarComoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if(this.saveFileDialog1.ShowDialog()==DialogResult.OK) {
+                this.filename = this.saveFileDialog1.FileName;
+                this.pictureBox1.Image.Save(this.filename,System.Drawing.Imaging.ImageFormat.Png);
             }
         }
     }
