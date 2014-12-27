@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 
 namespace Paintufla
@@ -40,9 +41,11 @@ namespace Paintufla
         private Panel tiraColores;
         private ToolStripMenuItem verToolStripMenuItem;
         private SaveFileDialog saveFileDialog1;
+        private OpenFileDialog openFileDialog1;
         private int x = 20;
         private int y = 20;
         private string filename;
+        private FileStream stream;
         private bool cambio = false;
 
         // Methods
@@ -164,8 +167,8 @@ namespace Paintufla
 
         private void nuevoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            DialogResult res = MessageBox.Show("¿Seguro que quiere crear una hoja nueva? Se perderán los datos no guardados.", "Nuevo", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-            if (res == DialogResult.Yes)
+            DialogResult res = confirmarGuardar();
+            if (res != DialogResult.Cancel)
             {
                 this.pictureBox1.Image.Dispose();
                 this.pictureBox1.Image = new Bitmap(this.pictureBox1.Width, this.pictureBox1.Height);
@@ -193,19 +196,8 @@ namespace Paintufla
         {
             if (this.cambio)
             {
-                DialogResult res = MessageBox.Show("¿Desea guardar los cambios antes de salir?", "Salir", MessageBoxButtons.YesNoCancel);
-                if (res == DialogResult.Yes)
-                {
-                    if (this.filename != null)
-                    {
-                        guardarComo();
-                    }
-                    else
-                    {
-                        guardarComo();
-                    }
-                }
-                else if (res == DialogResult.Cancel)
+                DialogResult res = confirmarGuardar();
+                if (res == DialogResult.Cancel)
                 {
                     e.Cancel = true;
                 }
@@ -214,6 +206,11 @@ namespace Paintufla
 
         private void guardarToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            guardar();
+        }
+
+        private void guardar()
+        {
             this.pictureBox1.Image.Save(this.filename, System.Drawing.Imaging.ImageFormat.Png);
             this.cambio = false;
         }
@@ -221,6 +218,52 @@ namespace Paintufla
         private void archivoToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.guardarToolStripMenuItem.Enabled = (filename != null && this.cambio);
+        }
+
+        private void abrirToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (this.openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                if (this.cambio)
+                {
+                    DialogResult res = confirmarGuardar();
+                    if (res != DialogResult.Cancel)
+                    {
+                        abrir();
+                    }
+                }
+                else
+                {
+                    abrir();
+                }
+            }
+        }
+
+        private System.Windows.Forms.DialogResult confirmarGuardar()
+        {
+            DialogResult res = MessageBox.Show("¿Desea guardar los cambios?", "Paintufla", MessageBoxButtons.YesNoCancel);
+            if (res == DialogResult.Yes)
+            {
+                if (this.filename != null)
+                {
+                    guardar();
+                }
+                else
+                {
+                    guardarComo();
+                }
+            }
+            return res;
+        }
+
+        private void abrir()
+        {
+            this.filename = this.openFileDialog1.FileName;
+            this.stream = new FileStream(this.filename, FileMode.Open, FileAccess.Read);
+            this.pictureBox1.Image = new Bitmap(this.stream);
+            this.stream.Close();
+            this.pictureBox1.Image.Save(Path.GetTempFileName());
+            this.cambio = false;
         }
     }
 }

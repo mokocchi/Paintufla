@@ -63,6 +63,7 @@ namespace Paintufla
             this.label2 = new System.Windows.Forms.Label();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -108,6 +109,7 @@ namespace Paintufla
             this.abrirToolStripMenuItem.Name = "abrirToolStripMenuItem";
             this.abrirToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.abrirToolStripMenuItem.Text = "Abrir";
+            this.abrirToolStripMenuItem.Click += new System.EventHandler(this.abrirToolStripMenuItem_Click);
             // 
             // guardarToolStripMenuItem
             // 
@@ -346,6 +348,12 @@ namespace Paintufla
             this.saveFileDialog1.DefaultExt = "png";
             this.saveFileDialog1.Filter = "Portable Network Graphics (PNG)|*.png";
             // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.CheckPathExists = false;
+            this.openFileDialog1.DefaultExt = "png";
+            this.openFileDialog1.Filter = "Portable Network Graphics (PNG)|*.png";
+            // 
             // MainForm
             // 
             this.BackColor = System.Drawing.SystemColors.AppWorkspace;
@@ -356,7 +364,7 @@ namespace Paintufla
             this.KeyPreview = true;
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "MainForm";
-            this.Text = "Paint";
+            this.Text = "Paintufla";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.Load += new System.EventHandler(this.MainFormLoad);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MainFormKeyDown);
@@ -371,6 +379,7 @@ namespace Paintufla
         }
 
         #endregion
+
 
         
     }
