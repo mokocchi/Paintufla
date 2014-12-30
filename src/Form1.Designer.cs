@@ -161,6 +161,7 @@ namespace Paintufla
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBox1.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.pictureBox1.BackgroundImage = global::Paintufla.Properties.Resources.estre;
             this.pictureBox1.Cursor = System.Windows.Forms.Cursors.Hand;
             this.pictureBox1.Location = new System.Drawing.Point(10, 33);
             this.pictureBox1.Name = "pictureBox1";
