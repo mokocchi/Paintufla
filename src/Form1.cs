@@ -110,7 +110,7 @@ namespace Paintufla
             {
                 this.comboBox1.Items.Add(i);
             }
-            this.comboBox1.SelectedIndex = 4;
+            this.comboBox1.SelectedIndex = 1;
             this.labelColorAct.BackColor = Color.Black;
         }
 
