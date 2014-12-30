@@ -60,7 +60,7 @@ namespace Paintufla
             {
                 return false;
             }
-            if (pX >= this.pictureBox1.Width)
+            if (pX >= this.pictureBox1.Image.Width)
             {
                 return false;
             }
@@ -68,7 +68,7 @@ namespace Paintufla
             {
                 return false;
             }
-            if (pY >= this.pictureBox1.Height)
+            if (pY >= this.pictureBox1.Image.Height)
             {
                 return false;
             }
