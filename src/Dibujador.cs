@@ -13,12 +13,22 @@ namespace Paintufla.src
     {
         private Pen pen;
         private Bitmap hoja;
+        public Color Color
+        {
+            get { return pen.Color; }
+            set { pen.Color = value; }
+        }
+        public int Ancho
+        {
+            get { return (int)pen.Width; }
+            set { pen.Width = value; }
+        }
 
         /// <summary>
-        /// Crea una instancia para dibujar en la hoja especificada, con un color fijo y un ancho variable
+        /// Crea una instancia para dibujar en la hoja especificada, con un color y un ancho
         /// </summary>
         /// <param name="hoja">Imagen sobre la que se quiere trabajar</param>
-        /// <param name="c">Color fijo de este dibujador</param>
+        /// <param name="c">Color de este dibujador</param>
         /// <param name="anchoInicial">Ancho del trazo</param>
         public Dibujador(Bitmap hoja, Color c, float anchoInicial)
         {

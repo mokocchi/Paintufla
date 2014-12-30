@@ -56,27 +56,6 @@ namespace Paintufla
             this.InitializeComponent();
         }
 
-        private bool enRango(int pX, int pY)
-        {
-            if (pX < 0)
-            {
-                return false;
-            }
-            if (pX >= this.pictureBox1.Image.Width)
-            {
-                return false;
-            }
-            if (pY < 0)
-            {
-                return false;
-            }
-            if (pY >= this.pictureBox1.Image.Height)
-            {
-                return false;
-            }
-            return true;
-        }
-
         private void MainFormKeyDown(object sender, KeyEventArgs e)
         {
             switch (e.KeyData)
@@ -120,13 +99,17 @@ namespace Paintufla
         private void hojaNueva()
         {
             this.pincel = new Dibujador(this.pictureBox1.Image as Bitmap, Color.White, 2);
-            Bitmap rec = this.pincel.crearRectangulo(this.pictureBox1.Image.Size, true);
-            this.pincel.pegarDibujo(rec, new Point(0));
+            using (Bitmap rec = this.pincel.crearRectangulo(this.pictureBox1.Image.Size, true))
+            {
+                this.pincel.pegarDibujo(rec, new Point(0));
+            }
+            this.pincel.Color = Color.Black;
+
         }
 
         private void Panel1Click(object sender, EventArgs e)
         {
-            this.colorActual = (sender as Panel).BackColor;
+            this.pincel.Color = (sender as Panel).BackColor;
             this.labelColorAct.BackColor = (sender as Panel).BackColor;
         }
 
@@ -146,18 +129,18 @@ namespace Paintufla
             {
                 this.x = this.pictureBox1.PointToClient(Control.MousePosition).X;
                 this.y = this.pictureBox1.PointToClient(Control.MousePosition).Y;
-                for (int i = 0; i < (this.ancho * this.ancho); i++)
-                {
-                    int pX = (this.x - (this.ancho / 2)) + (i / this.ancho);
-                    int pY = (this.y - (this.ancho / 2)) + (i % this.ancho);
-                    if (this.enRango(pX, pY))
-                    {
-                        (this.pictureBox1.Image as Bitmap).SetPixel(pX, pY, this.colorActual);
-                        this.cambio = true;
-                    }
-                }
+                pintar(x, y);
+                cambio = true;
             }
             this.pictureBox1.Refresh();
+        }
+
+        private void pintar(int x, int y)
+        {
+            using (Bitmap trazo = this.pincel.crearRectangulo(this.ancho * 2, true))
+            {
+                this.pincel.pegarDibujo(trazo, new Point(x - this.ancho, y - this.ancho));
+            }
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -170,7 +153,7 @@ namespace Paintufla
         {
             if (this.colorDialog1.ShowDialog() != DialogResult.Cancel)
             {
-                this.colorActual = this.colorDialog1.Color;
+                this.pincel.Color = this.colorDialog1.Color;
                 this.labelColorAct.BackColor = this.colorDialog1.Color;
             }
         }
