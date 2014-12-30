@@ -9,7 +9,7 @@ namespace Paintufla
     {
 
         private ToolStripMenuItem abrirToolStripMenuItem;
-        private int ancho = 2;
+        private int ancho = 1;
         private ToolStripMenuItem archivoToolStripMenuItem;
         private ToolStripMenuItem ayudaToolStripMenuItem;
         private Button button2;
@@ -106,7 +106,7 @@ namespace Paintufla
         private void MainFormLoad(object sender, EventArgs e)
         {
             this.pictureBox1.Image = new Bitmap(this.pictureBox1.Width, this.pictureBox1.Height);
-            for (int i = 0; i <= 40; i++)
+            for (int i = 1; i <= 5; i++)
             {
                 this.comboBox1.Items.Add(i);
             }
