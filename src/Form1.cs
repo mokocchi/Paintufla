@@ -8,47 +8,50 @@ namespace Paintufla
 {
     public partial class MainForm : Form
     {
-
-        private ToolStripMenuItem abrirToolStripMenuItem;
-        private int ancho = 1;
-        private ToolStripMenuItem archivoToolStripMenuItem;
-        private ToolStripMenuItem ayudaToolStripMenuItem;
-        private Button button2;
-        private Color colorActual = Color.Black;
-        private ColorDialog colorDialog1;
-        private ToolStripMenuItem coloresToolStripMenuItem;
-        private ComboBox comboBox1;
-        private ToolStripMenuItem ediciónToolStripMenuItem;
-        private GroupBox groupBox1;
-        private ToolStripMenuItem guardarComoToolStripMenuItem;
-        private ToolStripMenuItem guardarToolStripMenuItem;
-        private ToolStripMenuItem imagenToolStripMenuItem;
-        private Label label2;
-        private Panel labelColorAct;
-        private MenuStrip menuStrip1;
-        private ToolStripMenuItem nuevoToolStripMenuItem;
-        private Panel panel1;
-        private Panel panel10;
-        private Panel panel3;
-        private Panel panel4;
-        private Panel panel5;
-        private Panel panel6;
-        private Panel panel7;
-        private Panel panel8;
-        private Panel panel9;
-        private PictureBox pictureBox1;
+        #region variables logicas
+        private Dibujador pincel;
         private bool pinta = false;
-        private Timer timer1;
-        private Panel tiraColores;
-        private ToolStripMenuItem verToolStripMenuItem;
-        private SaveFileDialog saveFileDialog1;
-        private OpenFileDialog openFileDialog1;
+        private bool cambio = false;
+        private int ancho = 1;
         private int x = 20;
         private int y = 20;
         private string filename;
         private FileStream stream;
-        private bool cambio = false;
-        private Dibujador pincel;
+        #endregion
+        #region variables_form
+        private MenuStrip menuStrip1;
+        private ToolStripMenuItem archivoToolStripMenuItem;
+        private ToolStripMenuItem nuevoToolStripMenuItem;
+        private ToolStripMenuItem abrirToolStripMenuItem;
+        private ToolStripMenuItem guardarToolStripMenuItem;
+        private ToolStripMenuItem guardarComoToolStripMenuItem;
+        private ToolStripMenuItem ediciónToolStripMenuItem;
+        private ToolStripMenuItem verToolStripMenuItem;
+        private ToolStripMenuItem imagenToolStripMenuItem;
+        private ToolStripMenuItem coloresToolStripMenuItem;
+        private ToolStripMenuItem ayudaToolStripMenuItem;
+        private PictureBox fondo;
+        private GroupBox groupBoxHerramientas;
+        private Label labelAncho;
+        private ComboBox comboBoxAncho;
+        private Panel tiraColores;
+        private Panel panelColor1;
+        private Panel panelColor9;
+        private Panel panelColor2;
+        private Panel panelColor3;
+        private Panel panelColor4;
+        private Panel panelColor5;
+        private Panel panelColor6;
+        private Panel panelColor7;
+        private Panel panelColor8;
+        private Button buttonColorNuevo;
+        private Panel panelColorActual;
+        // no visibles
+        private ColorDialog colorDialog1;
+        private SaveFileDialog saveFileDialog1;
+        private OpenFileDialog openFileDialog1;
+        private Timer timer1;
+        #endregion
 
         // Methods
         public MainForm()
@@ -56,7 +59,7 @@ namespace Paintufla
             this.InitializeComponent();
         }
 
-        private void MainFormKeyDown(object sender, KeyEventArgs e)
+        private void mainFormKeyDown(object sender, KeyEventArgs e)
         {
             switch (e.KeyData)
             {
@@ -84,22 +87,22 @@ namespace Paintufla
             }
         }
 
-        private void MainFormLoad(object sender, EventArgs e)
+        private void mainFormLoad(object sender, EventArgs e)
         {
-            this.pictureBox1.Image = new Bitmap(this.pictureBox1.Width, this.pictureBox1.Height);
+            this.fondo.Image = new Bitmap(this.fondo.Width, this.fondo.Height);
             for (int i = 1; i <= 5; i++)
             {
-                this.comboBox1.Items.Add(i);
+                this.comboBoxAncho.Items.Add(i);
             }
-            this.comboBox1.SelectedIndex = 1;
-            this.labelColorAct.BackColor = Color.Black;
+            this.comboBoxAncho.SelectedIndex = 1;
+            this.panelColorActual.BackColor = Color.Black;
             hojaNueva();
         }
 
         private void hojaNueva()
         {
-            this.pincel = new Dibujador(this.pictureBox1.Image as Bitmap, Color.White, 2);
-            using (Bitmap rec = this.pincel.crearRectangulo(this.pictureBox1.Image.Size, true))
+            this.pincel = new Dibujador(this.fondo.Image as Bitmap, Color.White, 2);
+            using (Bitmap rec = this.pincel.crearRectangulo(this.fondo.Image.Size, true))
             {
                 this.pincel.pegarDibujo(rec, new Point(0));
             }
@@ -107,32 +110,32 @@ namespace Paintufla
 
         }
 
-        private void Panel1Click(object sender, EventArgs e)
+        private void panelColorClick(object sender, EventArgs e)
         {
             this.pincel.Color = (sender as Panel).BackColor;
-            this.labelColorAct.BackColor = (sender as Panel).BackColor;
+            this.panelColorActual.BackColor = (sender as Panel).BackColor;
         }
 
-        private void PictureBox1MouseDown(object sender, MouseEventArgs e)
+        private void fondoMouseDown(object sender, MouseEventArgs e)
         {
             this.pinta = true;
         }
 
-        private void PictureBox1MouseUp(object sender, MouseEventArgs e)
+        private void fondoMouseUp(object sender, MouseEventArgs e)
         {
             this.pinta = false;
         }
 
-        private void Timer1Tick(object sender, EventArgs e)
+        private void timer1Tick(object sender, EventArgs e)
         {
             if (this.pinta)
             {
-                this.x = this.pictureBox1.PointToClient(Control.MousePosition).X;
-                this.y = this.pictureBox1.PointToClient(Control.MousePosition).Y;
+                this.x = this.fondo.PointToClient(Control.MousePosition).X;
+                this.y = this.fondo.PointToClient(Control.MousePosition).Y;
                 pintar(x, y);
                 cambio = true;
             }
-            this.pictureBox1.Refresh();
+            this.fondo.Refresh();
         }
 
         private void pintar(int x, int y)
@@ -143,35 +146,35 @@ namespace Paintufla
             }
         }
 
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        private void comboBoxAnchoSelectedIndexChanged(object sender, EventArgs e)
         {
             if ((sender as ComboBox).SelectedItem != null)
                 this.ancho = (int)(sender as ComboBox).SelectedItem;
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void buttonColorNuevoClick(object sender, EventArgs e)
         {
             if (this.colorDialog1.ShowDialog() != DialogResult.Cancel)
             {
                 this.pincel.Color = this.colorDialog1.Color;
-                this.labelColorAct.BackColor = this.colorDialog1.Color;
+                this.panelColorActual.BackColor = this.colorDialog1.Color;
             }
         }
 
-        private void nuevoToolStripMenuItem_Click(object sender, EventArgs e)
+        private void nuevoToolStripMenuItemClick(object sender, EventArgs e)
         {
             DialogResult res = confirmarGuardar();
             if (res != DialogResult.Cancel)
             {
-                this.pictureBox1.Image.Dispose();
-                this.pictureBox1.Image = new Bitmap(this.pictureBox1.Width, this.pictureBox1.Height);
+                this.fondo.Image.Dispose();
+                this.fondo.Image = new Bitmap(this.fondo.Width, this.fondo.Height);
                 hojaNueva();
                 this.filename = null;
                 this.cambio = false;
             }
         }
 
-        private void guardarComoToolStripMenuItem_Click(object sender, EventArgs e)
+        private void guardarComoToolStripMenuItemClick(object sender, EventArgs e)
         {
             guardarComo();
         }
@@ -181,12 +184,12 @@ namespace Paintufla
             if (this.saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 this.filename = this.saveFileDialog1.FileName;
-                this.pictureBox1.Image.Save(this.filename, System.Drawing.Imaging.ImageFormat.Png);
+                this.fondo.Image.Save(this.filename, System.Drawing.Imaging.ImageFormat.Png);
                 this.cambio = false;
             }
         }
 
-        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        private void mainFormFormClosing(object sender, FormClosingEventArgs e)
         {
             if (this.cambio)
             {
@@ -198,23 +201,23 @@ namespace Paintufla
             }
         }
 
-        private void guardarToolStripMenuItem_Click(object sender, EventArgs e)
+        private void guardarToolStripMenuItemClick(object sender, EventArgs e)
         {
             guardar();
         }
 
         private void guardar()
         {
-            this.pictureBox1.Image.Save(this.filename, System.Drawing.Imaging.ImageFormat.Png);
+            this.fondo.Image.Save(this.filename, System.Drawing.Imaging.ImageFormat.Png);
             this.cambio = false;
         }
 
-        private void archivoToolStripMenuItem_Click(object sender, EventArgs e)
+        private void archivoToolStripMenuItemClick(object sender, EventArgs e)
         {
             this.guardarToolStripMenuItem.Enabled = (filename != null && this.cambio);
         }
 
-        private void abrirToolStripMenuItem_Click(object sender, EventArgs e)
+        private void abrirToolStripMenuItemClick(object sender, EventArgs e)
         {
             if (this.openFileDialog1.ShowDialog() == DialogResult.OK)
             {
@@ -254,9 +257,9 @@ namespace Paintufla
         {
             this.filename = this.openFileDialog1.FileName;
             this.stream = new FileStream(this.filename, FileMode.Open, FileAccess.Read);
-            this.pictureBox1.Image = new Bitmap(this.stream);
+            this.fondo.Image = new Bitmap(this.stream);
             this.stream.Close();
-            this.pictureBox1.Image.Save(Path.GetTempFileName());
+            this.fondo.Image.Save(Path.GetTempFileName());
             this.cambio = false;
         }
     }
