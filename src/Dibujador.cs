@@ -13,9 +13,6 @@ namespace Paintufla.src
     {
         private Pen pen;
         private Bitmap hoja;
-        private Image image;
-        private Color color;
-        private int p;
 
         /// <summary>
         /// Crea una instancia para dibujar en la hoja especificada, con un color fijo y un ancho variable
