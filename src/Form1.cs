@@ -163,7 +163,11 @@ namespace Paintufla
 
         private void nuevoToolStripMenuItemClick(object sender, EventArgs e)
         {
-            DialogResult res = confirmarGuardar();
+            DialogResult res = DialogResult.No;
+            if (this.cambio)
+            {
+                res = confirmarGuardar();
+            }
             if (res != DialogResult.Cancel)
             {
                 this.fondo.Image.Dispose();
