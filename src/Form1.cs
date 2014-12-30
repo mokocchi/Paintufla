@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Paintufla.src;
+using System;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -47,6 +48,7 @@ namespace Paintufla
         private string filename;
         private FileStream stream;
         private bool cambio = false;
+        private Dibujador pincel;
 
         // Methods
         public MainForm()
@@ -112,6 +114,14 @@ namespace Paintufla
             }
             this.comboBox1.SelectedIndex = 1;
             this.labelColorAct.BackColor = Color.Black;
+            hojaNueva();
+        }
+
+        private void hojaNueva()
+        {
+            this.pincel = new Dibujador(this.pictureBox1.Image as Bitmap, Color.White, 2);
+            Bitmap rec = this.pincel.crearRectangulo(this.pictureBox1.Image.Size, true);
+            this.pincel.pegarDibujo(rec, new Point(0));
         }
 
         private void Panel1Click(object sender, EventArgs e)
@@ -172,6 +182,7 @@ namespace Paintufla
             {
                 this.pictureBox1.Image.Dispose();
                 this.pictureBox1.Image = new Bitmap(this.pictureBox1.Width, this.pictureBox1.Height);
+                hojaNueva();
                 this.filename = null;
                 this.cambio = false;
             }
