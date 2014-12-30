@@ -64,24 +64,24 @@ namespace Paintufla
             switch (e.KeyData)
             {
                 case Keys.Add:
-                    this.ancho += 2;
+                    this.ancho++;
                     break;
 
                 case Keys.Subtract:
-                    if (this.ancho >= 0)
+                    if (this.ancho > 1)
                     {
-                        this.ancho -= 2;
+                        this.ancho--;
                     }
                     break;
 
                 case Keys.Oemplus:
-                    this.ancho += 2;
+                    this.ancho++;
                     break;
 
                 case Keys.OemMinus:
-                    if (this.ancho >= 0)
+                    if (this.ancho > 1)
                     {
-                        this.ancho -= 2;
+                        this.ancho--;
                     }
                     break;
             }
