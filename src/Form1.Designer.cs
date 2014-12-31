@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Paintufla.src;
+using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
@@ -32,7 +33,6 @@ namespace Paintufla
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.archivoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nuevoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -45,7 +45,6 @@ namespace Paintufla
             this.coloresToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ayudaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fondo = new System.Windows.Forms.PictureBox();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.comboBoxAncho = new System.Windows.Forms.ComboBox();
             this.groupBoxHerramientas = new System.Windows.Forms.GroupBox();
             this.panelColorActual = new System.Windows.Forms.Panel();
@@ -169,13 +168,8 @@ namespace Paintufla
             this.fondo.TabIndex = 1;
             this.fondo.TabStop = false;
             this.fondo.MouseDown += new System.Windows.Forms.MouseEventHandler(this.fondoMouseDown);
+            this.fondo.MouseMove += new System.Windows.Forms.MouseEventHandler(this.fondoMouseMove);
             this.fondo.MouseUp += new System.Windows.Forms.MouseEventHandler(this.fondoMouseUp);
-            // 
-            // timer1
-            // 
-            this.timer1.Enabled = true;
-            this.timer1.Interval = 5;
-            this.timer1.Tick += new System.EventHandler(this.timer1Tick);
             // 
             // comboBoxAncho
             // 

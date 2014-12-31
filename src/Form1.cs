@@ -1,5 +1,6 @@
 ﻿using Paintufla.src;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -10,9 +11,9 @@ namespace Paintufla
     {
         #region variables logicas
         private Dibujador pincel;
+        private List<Point> lineaActual;
         private bool pinta = false;
         private bool cambio = false;
-        private int ancho = 1;
         private int x = 20;
         private int y = 20;
         private string filename;
@@ -50,7 +51,6 @@ namespace Paintufla
         private ColorDialog colorDialog1;
         private SaveFileDialog saveFileDialog1;
         private OpenFileDialog openFileDialog1;
-        private Timer timer1;
         #endregion
 
         // Methods
@@ -64,24 +64,24 @@ namespace Paintufla
             switch (e.KeyData)
             {
                 case Keys.Add:
-                    this.ancho++;
+                    this.pincel.Ancho++;
                     break;
 
                 case Keys.Subtract:
-                    if (this.ancho > 1)
+                    if (this.pincel.Ancho > 1)
                     {
-                        this.ancho--;
+                        this.pincel.Ancho--;
                     }
                     break;
 
                 case Keys.Oemplus:
-                    this.ancho++;
+                    this.pincel.Ancho++;
                     break;
 
                 case Keys.OemMinus:
-                    if (this.ancho > 1)
+                    if (this.pincel.Ancho > 1)
                     {
-                        this.ancho--;
+                        this.pincel.Ancho--;
                     }
                     break;
             }
@@ -90,6 +90,7 @@ namespace Paintufla
         private void mainFormLoad(object sender, EventArgs e)
         {
             this.fondo.Image = new Bitmap(this.fondo.Width, this.fondo.Height);
+            this.pincel = new Dibujador(this.fondo.Image as Bitmap, Color.Black, 2);
             for (int i = 1; i <= 5; i++)
             {
                 this.comboBoxAncho.Items.Add(i);
@@ -119,37 +120,24 @@ namespace Paintufla
         private void fondoMouseDown(object sender, MouseEventArgs e)
         {
             this.pinta = true;
+            this.lineaActual = new List<Point>();
+            this.x = this.fondo.PointToClient(Control.MousePosition).X;
+            this.y = this.fondo.PointToClient(Control.MousePosition).Y;
+            this.lineaActual.Add(new Point(this.x, this.y));
         }
 
         private void fondoMouseUp(object sender, MouseEventArgs e)
         {
             this.pinta = false;
-        }
-
-        private void timer1Tick(object sender, EventArgs e)
-        {
-            if (this.pinta)
-            {
-                this.x = this.fondo.PointToClient(Control.MousePosition).X;
-                this.y = this.fondo.PointToClient(Control.MousePosition).Y;
-                pintar(x, y);
-                cambio = true;
-            }
-            this.fondo.Refresh();
-        }
-
-        private void pintar(int x, int y)
-        {
-            using (Bitmap trazo = this.pincel.crearRectangulo(this.ancho * 2, true))
-            {
-                this.pincel.pegarDibujo(trazo, new Point(x - this.ancho, y - this.ancho));
-            }
+            this.x = this.fondo.PointToClient(Control.MousePosition).X;
+            this.y = this.fondo.PointToClient(Control.MousePosition).Y;
+            this.lineaActual.Add(new Point(this.x, this.y));
         }
 
         private void comboBoxAnchoSelectedIndexChanged(object sender, EventArgs e)
         {
             if ((sender as ComboBox).SelectedItem != null)
-                this.ancho = (int)(sender as ComboBox).SelectedItem;
+                this.pincel.Ancho = (int)(sender as ComboBox).SelectedItem;
         }
 
         private void buttonColorNuevoClick(object sender, EventArgs e)
@@ -265,6 +253,22 @@ namespace Paintufla
             this.stream.Close();
             this.fondo.Image.Save(Path.GetTempFileName());
             this.cambio = false;
+        }
+
+        private void fondoMouseMove(object sender, MouseEventArgs e)
+        {
+            if (this.pinta)
+            {
+                this.x = this.fondo.PointToClient(Control.MousePosition).X;
+                this.y = this.fondo.PointToClient(Control.MousePosition).Y;
+                this.lineaActual.Add(new Point(this.x, this.y));
+                using (Bitmap bmp = this.pincel.crearLinea(this.lineaActual.ToArray(), new Size(this.fondo.Width, this.fondo.Height)))
+                {
+                    this.pincel.pegarDibujo(bmp, new Point(0));
+                };
+                cambio = true;
+            }
+            this.fondo.Refresh();
         }
     }
 }

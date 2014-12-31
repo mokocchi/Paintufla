@@ -83,6 +83,25 @@ namespace Paintufla.src
         }
 
         /// <summary>
+        /// Crea una linea que pasa por los puntos especificados
+        /// </summary>
+        /// <param name="puntos"></param>
+        /// <returns></returns>
+        public Bitmap crearLinea(Point[] puntos, Size s)
+        {
+            int top = puntos.Max<Point, int>((Point p) => (p.Y));
+            int bottom = puntos.Min<Point, int>((Point p) => (p.Y));
+            int left = puntos.Min<Point, int>((Point p) => (p.X));
+            int right = puntos.Max<Point, int>((Point p) => (p.X));
+            Bitmap bmp = new Bitmap(s.Width,s.Height);
+            using (Graphics graf = Graphics.FromImage(bmp))
+            {
+                graf.DrawLines(this.pen, puntos);
+            }
+            return bmp;
+        }
+
+        /// <summary>
         /// Pega el dibujo provisto en la hoja a la cual pertenece el Dibujador, en la posicion especificada
         /// </summary>
         /// <param name="dibujo">Dibujo a pegar</param>
