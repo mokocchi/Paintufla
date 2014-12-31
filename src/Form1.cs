@@ -102,7 +102,9 @@ namespace Paintufla
 
         private void hojaNueva()
         {
-            this.pincel = new Dibujador(this.fondo.Image as Bitmap, Color.White, 2);
+            this.pincel.Color = Color.White;
+            this.pincel.Ancho = 2;
+            this.pincel.Hoja = this.fondo.Image as Bitmap;
             using (Bitmap rec = this.pincel.crearRectangulo(this.fondo.Image.Size, true))
             {
                 this.pincel.pegarDibujo(rec, new Point(0));
@@ -252,6 +254,9 @@ namespace Paintufla
             this.fondo.Image = new Bitmap(this.stream);
             this.stream.Close();
             this.fondo.Image.Save(Path.GetTempFileName());
+            this.pincel.Hoja = this.fondo.Image as Bitmap;
+            this.comboBoxAncho.SelectedIndex = 1;
+            this.panelColorActual.BackColor = Color.Black;
             this.cambio = false;
         }
 

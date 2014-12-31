@@ -9,10 +9,15 @@ namespace Paintufla.src
     /// <summary>
     /// Objeto para dibujar figuras sobre una hoja con un color fijo y tamaño variable.
     /// </summary>
-    public class Dibujador
+    public class Dibujador : IDisposable
     {
         private Pen pen;
         private Bitmap hoja;
+        public Bitmap Hoja
+        {
+            get { return hoja; }
+            set { hoja = value; }
+        }
         public Color Color
         {
             get { return pen.Color; }
@@ -93,7 +98,7 @@ namespace Paintufla.src
             int bottom = puntos.Min<Point, int>((Point p) => (p.Y));
             int left = puntos.Min<Point, int>((Point p) => (p.X));
             int right = puntos.Max<Point, int>((Point p) => (p.X));
-            Bitmap bmp = new Bitmap(s.Width,s.Height);
+            Bitmap bmp = new Bitmap(s.Width, s.Height);
             using (Graphics graf = Graphics.FromImage(bmp))
             {
                 graf.DrawLines(this.pen, puntos);
@@ -114,5 +119,10 @@ namespace Paintufla.src
             }
         }
 
+
+        public void Dispose()
+        {
+            this.pen.Dispose();
+        }
     }
 }
