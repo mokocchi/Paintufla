@@ -167,7 +167,7 @@ namespace Paintufla
             this.fondo.Size = new System.Drawing.Size(722, 290);
             this.fondo.TabIndex = 1;
             this.fondo.TabStop = false;
-            this.fondo.Click += new System.EventHandler(this.fondo_Click);
+            this.fondo.Click += new System.EventHandler(this.fondoClick);
             this.fondo.MouseDown += new System.Windows.Forms.MouseEventHandler(this.fondoMouseDown);
             this.fondo.MouseMove += new System.Windows.Forms.MouseEventHandler(this.fondoMouseMove);
             this.fondo.MouseUp += new System.Windows.Forms.MouseEventHandler(this.fondoMouseUp);

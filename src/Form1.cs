@@ -279,18 +279,15 @@ namespace Paintufla
             this.y = this.fondo.PointToClient(Control.MousePosition).Y;
         }
 
-        private void fondo_Click(object sender, EventArgs e)
+        private void fondoClick(object sender, EventArgs e)
         {
-            if (pinta)
+            setearPosicion();
+            using (Bitmap bmp = this.pincel.crearPunto())
             {
-                setearPosicion();
-                using (Bitmap bmp = this.pincel.crearPunto())
-                {
-                    this.pincel.pegarDibujo(bmp, new Point(x, y));
-                }
-                cambio = true;
-                this.fondo.Refresh();
+                this.pincel.pegarDibujo(bmp, new Point(x, y));
             }
+            cambio = true;
+            this.fondo.Refresh();
         }
     }
 }
