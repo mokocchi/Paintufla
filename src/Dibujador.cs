@@ -47,7 +47,7 @@ namespace Paintufla.src
         /// <param name="lado">Longitud en pixeles</param>
         /// <param name="relleno">Si el cuadrado debe pintarse por dentro</param>
         /// <returns>un cuadrado para pegar en la hoja</returns>
-        public Bitmap crearRectangulo(int lado, bool relleno)
+        public Bitmap crearCuadrado(int lado, bool relleno)
         {
             return this.crearRectangulo(lado, lado, relleno);
         }
@@ -119,7 +119,10 @@ namespace Paintufla.src
             }
         }
 
-
+        public Bitmap crearPunto()
+        {
+            return this.crearCuadrado(this.Ancho,true);
+        }
         public void Dispose()
         {
             this.pen.Dispose();

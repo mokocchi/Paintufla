@@ -123,16 +123,14 @@ namespace Paintufla
         {
             this.pinta = true;
             this.lineaActual = new List<Point>();
-            this.x = this.fondo.PointToClient(Control.MousePosition).X;
-            this.y = this.fondo.PointToClient(Control.MousePosition).Y;
+            setearPosicion();
             this.lineaActual.Add(new Point(this.x, this.y));
         }
 
         private void fondoMouseUp(object sender, MouseEventArgs e)
         {
             this.pinta = false;
-            this.x = this.fondo.PointToClient(Control.MousePosition).X;
-            this.y = this.fondo.PointToClient(Control.MousePosition).Y;
+            setearPosicion();
             this.lineaActual.Add(new Point(this.x, this.y));
         }
 
@@ -264,16 +262,35 @@ namespace Paintufla
         {
             if (this.pinta)
             {
-                this.x = this.fondo.PointToClient(Control.MousePosition).X;
-                this.y = this.fondo.PointToClient(Control.MousePosition).Y;
+                setearPosicion();
                 this.lineaActual.Add(new Point(this.x, this.y));
                 using (Bitmap bmp = this.pincel.crearLinea(this.lineaActual.ToArray(), new Size(this.fondo.Width, this.fondo.Height)))
                 {
                     this.pincel.pegarDibujo(bmp, new Point(0));
                 };
                 cambio = true;
+                this.fondo.Refresh();
             }
-            this.fondo.Refresh();
+        }
+
+        private void setearPosicion()
+        {
+            this.x = this.fondo.PointToClient(Control.MousePosition).X;
+            this.y = this.fondo.PointToClient(Control.MousePosition).Y;
+        }
+
+        private void fondo_Click(object sender, EventArgs e)
+        {
+            if (pinta)
+            {
+                setearPosicion();
+                using (Bitmap bmp = this.pincel.crearPunto())
+                {
+                    this.pincel.pegarDibujo(bmp, new Point(x, y));
+                }
+                cambio = true;
+                this.fondo.Refresh();
+            }
         }
     }
 }
