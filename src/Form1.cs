@@ -75,7 +75,7 @@ namespace Paintufla
                     break;
 
                 case Keys.Oemplus:
-                    this.pincel.Ancho++; Console.WriteLine("++, pinta= {0}", this.pinta);
+                    this.pincel.Ancho++;
                     break;
 
                 case Keys.OemMinus:
@@ -121,7 +121,7 @@ namespace Paintufla
 
         private void fondoMouseDown(object sender, MouseEventArgs e)
         {
-            this.pinta = true; Console.WriteLine("true(mousedown)");
+            this.pinta = true;
             this.lineaActual = new List<Point>();
             setearPosicion();
             this.lineaActual.Add(new Point(this.x, this.y));
@@ -129,7 +129,7 @@ namespace Paintufla
 
         private void fondoMouseUp(object sender, MouseEventArgs e)
         {
-            this.pinta = false; Console.WriteLine("false(mouseup)");
+            this.pinta = false;
             setearPosicion();
             this.lineaActual.Add(new Point(this.x, this.y));
         }
@@ -262,7 +262,7 @@ namespace Paintufla
         {
             if (this.pinta)
             {
-                setearPosicion(); Console.WriteLine("pinto move");
+                setearPosicion();
                 this.lineaActual.Add(new Point(this.x, this.y));
                 using (Bitmap bmp = this.pincel.crearLinea(this.lineaActual.ToArray(), new Size(this.fondo.Width, this.fondo.Height)))
                 {
@@ -281,13 +281,16 @@ namespace Paintufla
 
         private void fondo_Click(object sender, EventArgs e)
         {
-            setearPosicion(); Console.WriteLine("pinto click");
-            using (Bitmap bmp = this.pincel.crearPunto())
+            if (pinta)
             {
-                this.pincel.pegarDibujo(bmp, new Point(x, y));
+                setearPosicion();
+                using (Bitmap bmp = this.pincel.crearPunto())
+                {
+                    this.pincel.pegarDibujo(bmp, new Point(x, y));
+                }
+                cambio = true;
+                this.fondo.Refresh();
             }
-            cambio = true;
-            this.fondo.Refresh();
         }
     }
 }
