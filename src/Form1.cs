@@ -110,13 +110,14 @@ namespace Paintufla
                 this.pincel.pegarDibujo(rec, new Point(0));
             }
             this.pincel.Color = Color.Black;
+            this.panelColorActual.BackColor = this.pincel.Color;
 
         }
 
         private void panelColorClick(object sender, EventArgs e)
         {
             this.pincel.Color = (sender as Panel).BackColor;
-            this.panelColorActual.BackColor = (sender as Panel).BackColor;
+            this.panelColorActual.BackColor = this.pincel.Color;
         }
 
         private void fondoMouseDown(object sender, MouseEventArgs e)
@@ -145,7 +146,7 @@ namespace Paintufla
             if (this.colorDialog1.ShowDialog() != DialogResult.Cancel)
             {
                 this.pincel.Color = this.colorDialog1.Color;
-                this.panelColorActual.BackColor = this.colorDialog1.Color;
+                this.panelColorActual.BackColor = this.pincel.Color;
             }
         }
 
