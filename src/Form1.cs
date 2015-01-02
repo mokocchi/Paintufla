@@ -176,6 +176,7 @@ namespace Paintufla
                 hojaNueva();
                 this.filename = null;
                 this.cambio = false;
+                this.Text = this.Text.Replace("*", "");
             }
         }
 
@@ -191,6 +192,7 @@ namespace Paintufla
                 this.filename = this.saveFileDialog1.FileName;
                 this.fondo.Image.Save(this.filename, pickFormat(this.saveFileDialog1));
                 this.cambio = false;
+                this.Text = this.Text.Replace("*", "");
             }
         }
 
@@ -239,6 +241,7 @@ namespace Paintufla
         {
             this.fondo.Image.Save(this.filename, System.Drawing.Imaging.ImageFormat.Png);
             this.cambio = false;
+            this.Text = this.Text.Replace("*", "");
         }
 
         private void archivoToolStripMenuItemClick(object sender, EventArgs e)
@@ -288,20 +291,21 @@ namespace Paintufla
             this.stream = new FileStream(this.filename, FileMode.Open, FileAccess.Read);
             try
             {
-            this.fondo.Image = new Bitmap(this.stream);
+                this.fondo.Image = new Bitmap(this.stream);
 
             }
             catch (ArgumentException e)
             {
-                MessageBox.Show("Formato inválido","Paintufla",MessageBoxButtons.OK,MessageBoxIcon.Error);
+                MessageBox.Show("Formato inválido", "Paintufla", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            this.fondo.Image.Save(Path.GetTempFileName(),pickFormat(this.openFileDialog1));
+            this.fondo.Image.Save(Path.GetTempFileName(), pickFormat(this.openFileDialog1));
             this.stream.Close();
             this.pincel.Hoja = this.fondo.Image as Bitmap;
             this.comboBoxAncho.SelectedIndex = 1;
             this.panelColorActual.BackColor = Color.Black;
             this.cambio = false;
+            this.Text = this.Text.Replace("*", "");
         }
 
         private void fondoMouseMove(object sender, MouseEventArgs e)
@@ -314,6 +318,10 @@ namespace Paintufla
                 {
                     this.pincel.pegarDibujo(bmp, new Point(0));
                 };
+                if (!this.cambio)
+                {
+                    this.Text += "*"; 
+                }
                 cambio = true;
                 this.fondo.Refresh();
             }
@@ -331,6 +339,10 @@ namespace Paintufla
             using (Bitmap bmp = this.pincel.crearPunto())
             {
                 this.pincel.pegarDibujo(bmp, new Point(x, y));
+            }
+            if (!this.cambio)
+            {
+                this.Text += "*";
             }
             cambio = true;
             this.fondo.Refresh();
