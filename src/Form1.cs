@@ -65,26 +65,37 @@ namespace Paintufla
             {
                 case Keys.Add:
                     this.pincel.Ancho++;
+                    actualizarAncho();
                     break;
 
                 case Keys.Subtract:
                     if (this.pincel.Ancho > 1)
                     {
                         this.pincel.Ancho--;
+                        actualizarAncho();
                     }
                     break;
 
                 case Keys.Oemplus:
                     this.pincel.Ancho++;
+                    actualizarAncho();
                     break;
 
                 case Keys.OemMinus:
                     if (this.pincel.Ancho > 1)
                     {
                         this.pincel.Ancho--;
+                        actualizarAncho();
                     }
                     break;
             }
+        }
+
+        private void actualizarAncho()
+        {
+            if (this.pincel.Ancho <= 5)
+                this.comboBoxAncho.SelectedIndex = this.pincel.Ancho - 1;
+
         }
 
         private void mainFormLoad(object sender, EventArgs e)
