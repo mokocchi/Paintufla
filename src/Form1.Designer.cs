@@ -342,13 +342,13 @@ namespace Paintufla
             // saveFileDialog1
             // 
             this.saveFileDialog1.DefaultExt = "png";
-            this.saveFileDialog1.Filter = "Portable Network Graphics (PNG)|*.png";
+            this.saveFileDialog1.Filter = "Portable Network Graphics (*.png)|*.png|Imagen jpg (*.jpg)|*.jpg|Imagen gif (*.gif)|*.gif|Imagen bmp (*.bmp)|*.bmp";
             // 
             // openFileDialog1
             // 
             this.openFileDialog1.CheckPathExists = false;
             this.openFileDialog1.DefaultExt = "png";
-            this.openFileDialog1.Filter = "Portable Network Graphics (PNG)|*.png";
+            this.openFileDialog1.Filter = "Portable Network Graphics (*.png)|*.png|Imagen jpg (*.jpg)|*.jpg|Imagen gif (*.gif)|*.gif|Imagen bmp (*.bmp)|*.bmp|Todos los archivos (*.*)|*.*";
             // 
             // MainForm
             // 

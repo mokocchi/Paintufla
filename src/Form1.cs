@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Windows.Forms;
 
@@ -16,6 +17,7 @@ namespace Paintufla
         private bool cambio = false;
         private int x = 20;
         private int y = 20;
+        private string fullFilename;
         private string filename;
         private FileStream stream;
         #endregion
@@ -108,6 +110,8 @@ namespace Paintufla
             }
             this.comboBoxAncho.SelectedIndex = 1;
             this.panelColorActual.BackColor = Color.Black;
+            this.filename = "DibujoNuevo";
+            this.Text = "Paintufla - " + this.filename;
             hojaNueva();
         }
 
@@ -176,8 +180,10 @@ namespace Paintufla
                 this.fondo.Image.Dispose();
                 this.fondo.Image = new Bitmap(this.fondo.Width, this.fondo.Height);
                 hojaNueva();
-                this.filename = null;
+                this.fullFilename = null;
                 this.cambio = false;
+                this.filename = "DibujoNuevo";
+                this.Text = "Paintufla - " + this.filename;
             }
         }
 
@@ -190,10 +196,36 @@ namespace Paintufla
         {
             if (this.saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                this.filename = this.saveFileDialog1.FileName;
-                this.fondo.Image.Save(this.filename, System.Drawing.Imaging.ImageFormat.Png);
+                this.fullFilename = this.saveFileDialog1.FileName;
+                this.fondo.Image.Save(this.fullFilename, pickFormat(this.saveFileDialog1));
                 this.cambio = false;
+                this.filename = this.fullFilename.Substring(this.fullFilename.LastIndexOf("\\") + 1); //ojo linux
+                this.Text = "Paintufla - " + this.filename;
             }
+        }
+
+        private ImageFormat pickFormat(FileDialog fileDialog)
+        {
+            ImageFormat format;
+            switch (fileDialog.FilterIndex) //*.png|*.jpg|*.gif|*.bmp";
+            {
+                case 0:
+                    format = ImageFormat.Png;
+                    break;
+                case 1:
+                    format = ImageFormat.Jpeg;
+                    break;
+                case 2:
+                    format = ImageFormat.Gif;
+                    break;
+                case 3:
+                    format = ImageFormat.Bmp;
+                    break;
+                default:
+                    format = ImageFormat.Png;
+                    break;
+            }
+            return format;
         }
 
         private void mainFormFormClosing(object sender, FormClosingEventArgs e)
@@ -215,17 +247,22 @@ namespace Paintufla
 
         private void guardar()
         {
-            this.fondo.Image.Save(this.filename, System.Drawing.Imaging.ImageFormat.Png);
+            this.fondo.Image.Save(this.fullFilename, System.Drawing.Imaging.ImageFormat.Png);
             this.cambio = false;
+            this.Text = this.Text.Replace("*", "");
         }
 
         private void archivoToolStripMenuItemClick(object sender, EventArgs e)
         {
-            this.guardarToolStripMenuItem.Enabled = (filename != null && this.cambio);
+            this.guardarToolStripMenuItem.Enabled = (fullFilename != null && this.cambio);
         }
 
         private void abrirToolStripMenuItemClick(object sender, EventArgs e)
         {
+            if (this.filename != "DibujoNuevo")
+            {
+                this.openFileDialog1.FileName = this.filename;
+            }
             if (this.openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 if (this.cambio)
@@ -248,7 +285,7 @@ namespace Paintufla
             DialogResult res = MessageBox.Show("¿Desea guardar los cambios?", "Paintufla", MessageBoxButtons.YesNoCancel);
             if (res == DialogResult.Yes)
             {
-                if (this.filename != null)
+                if (this.fullFilename != null)
                 {
                     guardar();
                 }
@@ -262,15 +299,39 @@ namespace Paintufla
 
         private void abrir()
         {
-            this.filename = this.openFileDialog1.FileName;
-            this.stream = new FileStream(this.filename, FileMode.Open, FileAccess.Read);
-            this.fondo.Image = new Bitmap(this.stream);
+            this.fullFilename = this.openFileDialog1.FileName;
+            this.stream = new FileStream(this.fullFilename, FileMode.Open, FileAccess.Read);
+            try
+            {
+                using (Bitmap deArchivo = new Bitmap(this.stream))
+                {
+                    Bitmap bmp = new Bitmap(deArchivo.Width, deArchivo.Height);
+                    using (Graphics graf = Graphics.FromImage(bmp))
+                    {
+                        graf.DrawImage(deArchivo, 0, 0);
+                    }
+                    this.fondo.Image = bmp;
+                }
+
+            }
+            catch (ArgumentException e)
+            {
+                MessageBox.Show("Formato inválido", "Paintufla", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            this.fondo.Image.Save(Path.GetTempFileName(), pickFormat(this.openFileDialog1));
             this.stream.Close();
-            this.fondo.Image.Save(Path.GetTempFileName());
             this.pincel.Hoja = this.fondo.Image as Bitmap;
             this.comboBoxAncho.SelectedIndex = 1;
             this.panelColorActual.BackColor = Color.Black;
             this.cambio = false;
+            this.filename = this.fullFilename.Substring(this.fullFilename.LastIndexOf("\\") + 1); //ojo linux
+            this.Text = "Paintufla - " + this.filename;
+        }
+
+        private bool enRango(int pX, int pY)
+        {
+            return !((pX < 0) || (pX >= this.fondo.Image.Width) || (pY < 0) || (pY >= this.fondo.Image.Height));
         }
 
         private void fondoMouseMove(object sender, MouseEventArgs e)
@@ -283,7 +344,14 @@ namespace Paintufla
                 {
                     this.pincel.pegarDibujo(bmp, new Point(0));
                 };
-                cambio = true;
+                if (enRango(x, y))
+                {
+                    if (!this.cambio)
+                    {
+                        this.Text += "*";
+                    }
+                    cambio = true;
+                }
                 this.fondo.Refresh();
             }
         }
@@ -301,7 +369,14 @@ namespace Paintufla
             {
                 this.pincel.pegarDibujo(bmp, new Point(x, y));
             }
-            cambio = true;
+            if (enRango(x, y))
+            {
+                if (!this.cambio)
+                {
+                    this.Text += "*";
+                }
+                cambio = true;
+            }
             this.fondo.Refresh();
         }
     }
