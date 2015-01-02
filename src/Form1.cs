@@ -296,7 +296,15 @@ namespace Paintufla
             this.stream = new FileStream(this.fullFilename, FileMode.Open, FileAccess.Read);
             try
             {
-                this.fondo.Image = new Bitmap(this.stream);
+                using (Bitmap deArchivo = new Bitmap(this.stream))
+                {
+                    Bitmap bmp = new Bitmap(deArchivo.Width, deArchivo.Height);
+                    using (Graphics graf = Graphics.FromImage(bmp))
+                    {
+                        graf.DrawImage(deArchivo, 0, 0);
+                    }
+                    this.fondo.Image = bmp;
+                }
 
             }
             catch (ArgumentException e)
