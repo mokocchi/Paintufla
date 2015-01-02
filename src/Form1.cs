@@ -130,9 +130,12 @@ namespace Paintufla
 
         private void fondoMouseUp(object sender, MouseEventArgs e)
         {
-            this.pinta = false;
-            setearPosicion();
-            this.lineaActual.Add(new Point(this.x, this.y));
+            if (this.pinta)
+            {
+                this.pinta = false;
+                setearPosicion();
+                this.lineaActual.Add(new Point(this.x, this.y));
+            }
         }
 
         private void comboBoxAnchoSelectedIndexChanged(object sender, EventArgs e)
