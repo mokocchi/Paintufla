@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Windows.Forms;
 
@@ -188,9 +189,33 @@ namespace Paintufla
             if (this.saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 this.filename = this.saveFileDialog1.FileName;
-                this.fondo.Image.Save(this.filename, System.Drawing.Imaging.ImageFormat.Png);
+                this.fondo.Image.Save(this.filename, pickFormat(this.saveFileDialog1));
                 this.cambio = false;
             }
+        }
+
+        private ImageFormat pickFormat(FileDialog fileDialog)
+        {
+            ImageFormat format;
+            switch (fileDialog.FilterIndex) //*.png|*.jpg|*.gif|*.bmp";
+            {
+                case 0:
+                    format = ImageFormat.Png;
+                    break;
+                case 1:
+                    format = ImageFormat.Jpeg;
+                    break;
+                case 2:
+                    format = ImageFormat.Gif;
+                    break;
+                case 3:
+                    format = ImageFormat.Bmp;
+                    break;
+                default:
+                    format = ImageFormat.Png;
+                    break;
+            }
+            return format;
         }
 
         private void mainFormFormClosing(object sender, FormClosingEventArgs e)
@@ -261,9 +286,18 @@ namespace Paintufla
         {
             this.filename = this.openFileDialog1.FileName;
             this.stream = new FileStream(this.filename, FileMode.Open, FileAccess.Read);
+            try
+            {
             this.fondo.Image = new Bitmap(this.stream);
+
+            }
+            catch (ArgumentException e)
+            {
+                MessageBox.Show("Formato inválido","Paintufla",MessageBoxButtons.OK,MessageBoxIcon.Error);
+                return;
+            }
+            this.fondo.Image.Save(Path.GetTempFileName(),pickFormat(this.openFileDialog1));
             this.stream.Close();
-            this.fondo.Image.Save(Path.GetTempFileName());
             this.pincel.Hoja = this.fondo.Image as Bitmap;
             this.comboBoxAncho.SelectedIndex = 1;
             this.panelColorActual.BackColor = Color.Black;
