@@ -256,6 +256,10 @@ namespace Paintufla
 
         private void abrirToolStripMenuItemClick(object sender, EventArgs e)
         {
+            if (this.filename != "DibujoNuevo")
+            {
+                this.openFileDialog1.FileName = this.filename;
+            }
             if (this.openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 if (this.cambio)
