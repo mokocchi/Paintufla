@@ -308,6 +308,11 @@ namespace Paintufla
             this.Text = this.Text.Replace("*", "");
         }
 
+        private bool enRango(int pX, int pY)
+        {
+            return !((pX < 0) || (pX >= this.fondo.Image.Width) || (pY < 0) || (pY >= this.fondo.Image.Height));
+        }
+
         private void fondoMouseMove(object sender, MouseEventArgs e)
         {
             if (this.pinta)
@@ -318,11 +323,14 @@ namespace Paintufla
                 {
                     this.pincel.pegarDibujo(bmp, new Point(0));
                 };
-                if (!this.cambio)
+                if (enRango(x, y))
                 {
-                    this.Text += "*"; 
+                    if (!this.cambio)
+                    {
+                        this.Text += "*";
+                    }
+                    cambio = true;
                 }
-                cambio = true;
                 this.fondo.Refresh();
             }
         }
@@ -340,11 +348,14 @@ namespace Paintufla
             {
                 this.pincel.pegarDibujo(bmp, new Point(x, y));
             }
-            if (!this.cambio)
+            if (enRango(x, y))
             {
-                this.Text += "*";
+                if (!this.cambio)
+                {
+                    this.Text += "*";
+                }
+                cambio = true;
             }
-            cambio = true;
             this.fondo.Refresh();
         }
     }
